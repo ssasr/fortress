@@ -1,66 +1,40 @@
-import {Component} from 'react';
+import { Component } from 'react';
 import Fortress from './fortress.component';
 import './burninglist.css';
-let fortressObj=[{
-    world:'fire peaks',
-    location:[672,678],
-    coolDown:[15,30,6],
-    isBurning:true,
-},
-{
-  world:'fire peaks',
-  location:[672,711],
-  coolDown:[8,50,6],
-  isBurning:true,
-},
-{
-  world:'fire peaks',
-  location:[672,678],
-  coolDown:[15,30,6],
-  isBurning:true,
-},
-{
-  world:'fire peaks',
-  location:[672,678],
-  coolDown:[15,30,6],
-  isBurning:true,
-},
-{
-  world:'fire peaks',
-  location:[672,678],
-  coolDown:[15,30,6],
-  isBurning:true,
-},
-{
-  world:'fire peaks',
-  location:[672,678],
-  coolDown:[15,30,6],
-  isBurning:true,
-},
-{
-  world:'fire peaks',
-  location:[672,678],
-  coolDown:[15,30,6],
-  isBurning:true,
-},
-]
-let cooldownCal= (hr,min,sec)=>{
-  return((Date.now()-(hr*3600+min*60+sec)*1000))
-}
-fortressObj=fortressObj.map((F)=>{
-  const {world,location,coolDown,isBurning}=F
-return({world,location,coolDown:cooldownCal(...coolDown),isBurning})
-})
+
 class Burning extends Component {
-    render() {
-      return (
-        <div>
-          {fortressObj.map((F) =>{
-          return(<Fortress key={Math.random()} {...F}>  </Fortress>)
-        }
-          )}
-      </div>
-      )
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [{world:"fire",location:[652,652],firstHit:1681304003643}],
+    };
   }
-  export default Burning
+
+  async componentDidMount() {
+    const response = await fetch('http://localhost:5000/data');
+    const data = await response.json();
+    console.log("from client",data)
+    this.setState({ data });
+  }
+  render() {
+    return (
+      <div>
+        {/* {fortressObj.map((F) => {
+          return (<Fortress key={Math.random()} {...F}>  </Fortress>)
+        }
+        )} */}
+        <table >
+          <tr>
+            <th></th><th>World</th><th>Location</th><th>Distance</th><th>Cooldown</th>
+          </tr>
+        
+         {this.state.data.map((F) => {
+          return (<Fortress key={Math.random()} {...F}/>)
+        }
+        )}
+        </table>
+      </div>
+    )
+  }
+}
+export default Burning
